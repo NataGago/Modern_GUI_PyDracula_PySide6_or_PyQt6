@@ -24,6 +24,9 @@ from modules import *
 from widgets import *
 os.environ["QT_FONT_DPI"] = "96" # FIX Problem for High DPI and Scale above 100%
 
+# SET PLUGIN PATH
+
+os.environ['QT_QPA_PLATFORM_PLUGIN_PATH'] = os.path.join(os.getcwd(), r".venv\lib\python3.8\site-packages\PySide6\Qt\plugins\platforms")
 # SET AS GLOBAL WIDGETS
 # ///////////////////////////////////////////////////////////////
 widgets = None
@@ -105,6 +108,15 @@ class MainWindow(QMainWindow):
         widgets.stackedWidget.setCurrentWidget(widgets.home)
         widgets.btn_home.setStyleSheet(UIFunctions.selectMenu(widgets.btn_home.styleSheet()))
 
+        #* Movimentar Janela
+        def moveWindow(event):
+            if event.buttons() == Qt.LeftButton:
+                self.move(self.pos() + event.globalPosition().toPoint() - self.dragPos)
+                self.dragPos = event.globalPosition().toPoint()
+                event.accept()
+        widgets.mouseMoveEvent = moveWindow
+        widgets.mouseMoveEvent = moveWindow
+
 
     # BUTTONS CLICK
     # Post here your functions for clicked buttons
@@ -147,9 +159,18 @@ class MainWindow(QMainWindow):
 
     # MOUSE CLICK EVENTS
     # ///////////////////////////////////////////////////////////////
+    # def mousePressEvent(self, event):
+    #     # SET DRAG POS WINDOW
+    #     self.dragPos = event.globalPos()
+
+    #     # PRINT MOUSE EVENTS
+    #     if event.buttons() == Qt.LeftButton:
+    #         print('Mouse click: LEFT CLICK')
+    #     if event.buttons() == Qt.RightButton:
+    #         print('Mouse click: RIGHT CLICK')
+    
     def mousePressEvent(self, event):
-        # SET DRAG POS WINDOW
-        self.dragPos = event.globalPos()
+        self.dragPos = event.globalPosition().toPoint()
 
         # PRINT MOUSE EVENTS
         if event.buttons() == Qt.LeftButton:
@@ -161,4 +182,4 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     app.setWindowIcon(QIcon("icon.ico"))
     window = MainWindow()
-    sys.exit(app.exec_())
+    sys.exit(app.exec())
